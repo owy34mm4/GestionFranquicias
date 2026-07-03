@@ -3,17 +3,46 @@ package co.com.bancolombia.r2dbc.adapter;
 import co.com.bancolombia.model.franchise.Franchise;
 import co.com.bancolombia.model.franchise.gateways.FranchiseRepository;
 import co.com.bancolombia.r2dbc.data.FranchiseData;
-import co.com.bancolombia.r2dbc.helper.ReactiveAdapterOperations;
 import co.com.bancolombia.r2dbc.repository.FranchiseReactiveRepository;
-import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Repository
-public class FranchiseReactiveRepositoryAdapter
-        extends ReactiveAdapterOperations<Franchise, FranchiseData, Long, FranchiseReactiveRepository>
-        implements FranchiseRepository {
+public class FranchiseReactiveRepositoryAdapter implements FranchiseRepository {
 
-    public FranchiseReactiveRepositoryAdapter(FranchiseReactiveRepository repository, ObjectMapper mapper) {
-        super(repository, mapper, d -> mapper.map(d, Franchise.class));
+    private final FranchiseReactiveRepository repository;
+
+    public FranchiseReactiveRepositoryAdapter(FranchiseReactiveRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public Mono<Franchise> save(Franchise franchise) {
+        return repository.save(toData(franchise)).map(this::toEntity);
+    }
+
+    @Override
+    public Mono<Franchise> findById(Long id) {
+        return repository.findById(id).map(this::toEntity);
+    }
+
+    @Override
+    public Flux<Franchise> findAll() {
+        return repository.findAll().map(this::toEntity);
+    }
+
+    private FranchiseData toData(Franchise franchise) {
+        return FranchiseData.builder()
+                .id(franchise.getId())
+                .name(franchise.getName())
+                .build();
+    }
+
+    private Franchise toEntity(FranchiseData data) {
+        return Franchise.builder()
+                .id(data.getId())
+                .name(data.getName())
+                .build();
     }
 }

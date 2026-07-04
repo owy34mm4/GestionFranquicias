@@ -2,6 +2,7 @@ package co.com.gestorfranquicia.api;
 
 import co.com.gestorfranquicia.api.dto.CreateFranchiseRequest;
 import co.com.gestorfranquicia.api.dto.FranchiseResponse;
+import co.com.gestorfranquicia.api.validation.RequestValidator;
 import co.com.gestorfranquicia.usecase.franchise.FranchiseUseCase;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class Handler {
 //private  final UseCase2 useCase2;
 
     private final FranchiseUseCase franchiseUseCase;
+    private final RequestValidator requestValidator;
 
     public Mono<ServerResponse> listenGETUseCase(ServerRequest serverRequest) {
         // useCase.logic();
@@ -39,6 +41,7 @@ public class Handler {
     @CircuitBreaker(name = "franchiseCreate")
     public Mono<ServerResponse> createFranchise(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CreateFranchiseRequest.class)
+                .flatMap(requestValidator::validate)
                 .flatMap(request -> franchiseUseCase.create(request.name()))
                 .flatMap(franchise -> ServerResponse
                         .created(URI.create("/api/franchises/" + franchise.getId()))

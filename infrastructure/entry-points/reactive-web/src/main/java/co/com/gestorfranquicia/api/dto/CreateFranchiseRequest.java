@@ -1,4 +1,6 @@
 package co.com.gestorfranquicia.api.dto;
 
-public record CreateFranchiseRequest(String name) {
+import jakarta.validation.constraints.NotBlank;
+
+public record CreateFranchiseRequest(@NotBlank String name) {
 }

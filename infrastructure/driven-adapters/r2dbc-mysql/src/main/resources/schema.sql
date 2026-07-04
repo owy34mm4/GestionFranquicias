@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS franchise (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS branch (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    franchise_id BIGINT NOT NULL,
+    CONSTRAINT fk_branch_franchise FOREIGN KEY (franchise_id) REFERENCES franchise (id)
+);
+
+CREATE TABLE IF NOT EXISTS product (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    stock INT NOT NULL DEFAULT 0,
+    branch_id BIGINT NOT NULL,
+    CONSTRAINT fk_product_branch FOREIGN KEY (branch_id) REFERENCES branch (id)
+);

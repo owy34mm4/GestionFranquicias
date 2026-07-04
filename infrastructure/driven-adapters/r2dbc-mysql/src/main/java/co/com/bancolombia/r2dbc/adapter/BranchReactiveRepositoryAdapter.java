@@ -41,10 +41,6 @@ public class BranchReactiveRepositoryAdapter implements BranchRepository {
     }
 
     private Branch toEntity(BranchData data) {
-        return Branch.builder()
-                .id(data.getId())
-                .name(data.getName())
-                .franchiseId(data.getFranchiseId())
-                .build();
+        return Branch.reconstitute(data.getId(), data.getName(), data.getFranchiseId());
     }
 }

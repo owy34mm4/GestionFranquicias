@@ -40,9 +40,6 @@ public class FranchiseReactiveRepositoryAdapter implements FranchiseRepository {
     }
 
     private Franchise toEntity(FranchiseData data) {
-        return Franchise.builder()
-                .id(data.getId())
-                .name(data.getName())
-                .build();
+        return Franchise.reconstitute(data.getId(), data.getName());
     }
 }

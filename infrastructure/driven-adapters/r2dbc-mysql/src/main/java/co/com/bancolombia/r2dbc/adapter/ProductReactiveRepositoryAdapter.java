@@ -42,11 +42,6 @@ public class ProductReactiveRepositoryAdapter implements ProductRepository {
     }
 
     private Product toEntity(ProductData data) {
-        return Product.builder()
-                .id(data.getId())
-                .name(data.getName())
-                .stock(data.getStock())
-                .branchId(data.getBranchId())
-                .build();
+        return Product.reconstitute(data.getId(), data.getName(), data.getStock(), data.getBranchId());
     }
 }

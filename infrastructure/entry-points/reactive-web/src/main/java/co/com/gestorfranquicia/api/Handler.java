@@ -3,6 +3,7 @@ package co.com.gestorfranquicia.api;
 import co.com.gestorfranquicia.api.dto.CreateFranchiseRequest;
 import co.com.gestorfranquicia.api.dto.FranchiseResponse;
 import co.com.gestorfranquicia.usecase.franchise.FranchiseUseCase;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,7 @@ public class Handler {
         return ServerResponse.ok().bodyValue("");
     }
 
+    @CircuitBreaker(name = "franchiseCreate")
     public Mono<ServerResponse> createFranchise(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CreateFranchiseRequest.class)
                 .flatMap(request -> franchiseUseCase.create(request.name()))

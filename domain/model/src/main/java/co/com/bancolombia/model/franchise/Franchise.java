@@ -14,4 +14,17 @@ import lombok.Setter;
 public class Franchise {
     private Long id;
     private String name;
+
+    public static Franchise create(String name) {
+        return Franchise.builder()
+                .name(name)
+                .build();
+    }
+
+    public static Franchise reconstitute(Long id, String name) {
+        return Franchise.builder()
+                .id(id)
+                .name(name)
+                .build();
+    }
 }

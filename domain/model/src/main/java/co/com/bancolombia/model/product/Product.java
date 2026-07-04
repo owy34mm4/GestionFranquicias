@@ -16,4 +16,21 @@ public class Product {
     private String name;
     private Integer stock;
     private Long branchId;
+
+    public static Product create(String name, Integer stock, Long branchId) {
+        return Product.builder()
+                .name(name)
+                .stock(stock)
+                .branchId(branchId)
+                .build();
+    }
+
+    public static Product reconstitute(Long id, String name, Integer stock, Long branchId) {
+        return Product.builder()
+                .id(id)
+                .name(name)
+                .stock(stock)
+                .branchId(branchId)
+                .build();
+    }
 }

@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RequestPredicates.PATCH;
 import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
@@ -117,6 +119,8 @@ public class RouterRest {
                 .and(route(GET("/api/otherusercase/path"), handler::listenGETOtherUseCase))
                 .andRoute(POST("/api/franchises"), handler::createFranchise)
                 .andRoute(POST("/api/franchises/{franchiseId}/branches"), handler::createBranch)
-                .andRoute(POST("/api/branches/{branchId}/products"), handler::createProduct);
+                .andRoute(POST("/api/branches/{branchId}/products"), handler::createProduct)
+                .andRoute(DELETE("/api/branches/{branchId}/products/{productId}"), handler::deleteProduct)
+                .andRoute(PATCH("/api/branches/{branchId}/products/{productId}/stock"), handler::updateProductStock);
     }
 }

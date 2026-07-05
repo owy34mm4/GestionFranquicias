@@ -6,6 +6,7 @@ import co.com.gestorfranquicia.api.dto.CreateFranchiseRequest;
 import co.com.gestorfranquicia.api.dto.CreateProductRequest;
 import co.com.gestorfranquicia.api.dto.FranchiseResponse;
 import co.com.gestorfranquicia.api.dto.ProductResponse;
+import co.com.gestorfranquicia.api.dto.UpdateStockRequest;
 import co.com.gestorfranquicia.api.validation.RequestValidator;
 import co.com.gestorfranquicia.usecase.branch.BranchUseCase;
 import co.com.gestorfranquicia.usecase.franchise.FranchiseUseCase;
@@ -77,6 +78,24 @@ public class Handler {
                 .flatMap(request -> productUseCase.create(request.name(), request.stock(), branchId))
                 .flatMap(product -> ServerResponse
                         .created(URI.create("/api/products/" + product.getId()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(new ProductResponse(product.getId(), product.getName(), product.getStock(), product.getBranchId())));
+    }
+
+    public Mono<ServerResponse> deleteProduct(ServerRequest serverRequest) {
+        Long branchId = Long.valueOf(serverRequest.pathVariable("branchId"));
+        Long productId = Long.valueOf(serverRequest.pathVariable("productId"));
+        return productUseCase.delete(productId, branchId)
+                .then(ServerResponse.noContent().build());
+    }
+
+    public Mono<ServerResponse> updateProductStock(ServerRequest serverRequest) {
+        Long branchId = Long.valueOf(serverRequest.pathVariable("branchId"));
+        Long productId = Long.valueOf(serverRequest.pathVariable("productId"));
+        return serverRequest.bodyToMono(UpdateStockRequest.class)
+                .flatMap(requestValidator::validate)
+                .flatMap(request -> productUseCase.updateStock(productId, branchId, request.stock()))
+                .flatMap(product -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(new ProductResponse(product.getId(), product.getName(), product.getStock(), product.getBranchId())));
     }

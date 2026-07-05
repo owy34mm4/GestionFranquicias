@@ -1,5 +1,7 @@
 package co.com.gestorfranquicia.model.branch;
 
+import co.com.gestorfranquicia.model.enums.TechnicalMessage;
+import co.com.gestorfranquicia.model.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,8 +19,11 @@ public class Branch {
     private Long franchiseId;
 
     public static Branch create(String name, Long franchiseId) {
+        if (name == null || name.isBlank()) {
+            throw new BusinessException(TechnicalMessage.BRANCH_NAME_REQUIRED);
+        }
         return Branch.builder()
-                .name(name)
+                .name(name.trim())
                 .franchiseId(franchiseId)
                 .build();
     }

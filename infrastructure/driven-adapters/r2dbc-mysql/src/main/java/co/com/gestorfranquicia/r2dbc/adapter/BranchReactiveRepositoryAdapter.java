@@ -2,6 +2,7 @@ package co.com.gestorfranquicia.r2dbc.adapter;
 
 import co.com.gestorfranquicia.model.branch.Branch;
 import co.com.gestorfranquicia.model.branch.gateways.BranchRepository;
+import co.com.gestorfranquicia.model.enums.CreationCheck;
 import co.com.gestorfranquicia.r2dbc.data.BranchData;
 import co.com.gestorfranquicia.r2dbc.repository.BranchReactiveRepository;
 import org.springframework.stereotype.Repository;
@@ -30,6 +31,11 @@ public class BranchReactiveRepositoryAdapter implements BranchRepository {
     @Override
     public Flux<Branch> findAll() {
         return repository.findAll().map(this::toEntity);
+    }
+
+    @Override
+    public Mono<CreationCheck> validateForCreation(String name, Long franchiseId) {
+        return repository.validateForCreation(name, franchiseId).map(CreationCheck::valueOf);
     }
 
     private BranchData toData(Branch branch) {

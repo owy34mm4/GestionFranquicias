@@ -1,5 +1,7 @@
 package co.com.gestorfranquicia.model.product;
 
+import co.com.gestorfranquicia.model.enums.TechnicalMessage;
+import co.com.gestorfranquicia.model.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,8 +20,14 @@ public class Product {
     private Long branchId;
 
     public static Product create(String name, Integer stock, Long branchId) {
+        if (name == null || name.isBlank()) {
+            throw new BusinessException(TechnicalMessage.PRODUCT_NAME_REQUIRED);
+        }
+        if (stock == null || stock < 0) {
+            throw new BusinessException(TechnicalMessage.PRODUCT_STOCK_INVALID);
+        }
         return Product.builder()
-                .name(name)
+                .name(name.trim())
                 .stock(stock)
                 .branchId(branchId)
                 .build();

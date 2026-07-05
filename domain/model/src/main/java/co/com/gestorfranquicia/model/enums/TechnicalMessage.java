@@ -14,7 +14,14 @@ public enum TechnicalMessage {
     INVALID_PARAMETERS(INVALID_REQUEST.getCode(), "Bad Parameters, please verify data", ""),
     FRANCHISE_NAME_REQUIRED("400", "Franchise name is required", "name"),
     FRANCHISE_ALREADY_EXISTS("409", "Franchise already exists", "name"),
-    FRANCHISE_CREATED("201", "Franchise created successfully", "");
+    FRANCHISE_CREATED("201", "Franchise created successfully", ""),
+    BRANCH_NAME_REQUIRED("400", "Branch name is required", "name"),
+    FRANCHISE_NOT_FOUND("404", "Franchise not found", "franchiseId"),
+    BRANCH_ALREADY_EXISTS("409", "Branch already exists in this franchise", "name"),
+    PRODUCT_NAME_REQUIRED("400", "Product name is required", "name"),
+    PRODUCT_STOCK_INVALID("400", "Product stock must be zero or positive", "stock"),
+    BRANCH_NOT_FOUND("404", "Branch not found", "branchId"),
+    PRODUCT_ALREADY_EXISTS("409", "Product already exists in this branch", "name");
 
     private final String code;
     private final String message;

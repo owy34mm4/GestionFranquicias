@@ -35,4 +35,11 @@ public class Branch {
                 .franchiseId(franchiseId)
                 .build();
     }
+
+    public Branch changeName(String newName) {
+        if (newName == null || newName.isBlank()) {
+            throw new BusinessException(TechnicalMessage.BRANCH_NAME_REQUIRED);
+        }
+        return this.toBuilder().name(newName.trim()).build();
+    }
 }

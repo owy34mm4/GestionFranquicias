@@ -88,6 +88,7 @@ public class Handler {
                         .bodyValue(new ProductResponse(product.getId(), product.getName(), product.getStock(), product.getBranchId())));
     }
 
+    @CircuitBreaker(name = "franchiseTopStock")
     public Mono<ServerResponse> topStockByFranchise(ServerRequest serverRequest) {
         Long franchiseId = Long.valueOf(serverRequest.pathVariable("franchiseId"));
         return franchiseUseCase.topStockPerBranch(franchiseId)

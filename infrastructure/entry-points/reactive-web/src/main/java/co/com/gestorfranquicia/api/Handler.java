@@ -57,6 +57,7 @@ public class Handler {
                         .bodyValue(new FranchiseResponse(franchise.getId(), franchise.getName())));
     }
 
+    @CircuitBreaker(name = "branchCreate")
     public Mono<ServerResponse> createBranch(ServerRequest serverRequest) {
         Long franchiseId = Long.valueOf(serverRequest.pathVariable("franchiseId"));
         return serverRequest.bodyToMono(CreateBranchRequest.class)
@@ -68,6 +69,7 @@ public class Handler {
                         .bodyValue(new BranchResponse(branch.getId(), branch.getName(), branch.getFranchiseId())));
     }
 
+    @CircuitBreaker(name = "productCreate")
     public Mono<ServerResponse> createProduct(ServerRequest serverRequest) {
         Long branchId = Long.valueOf(serverRequest.pathVariable("branchId"));
         return serverRequest.bodyToMono(CreateProductRequest.class)

@@ -6,6 +6,7 @@ import co.com.gestorfranquicia.api.dto.CreateFranchiseRequest;
 import co.com.gestorfranquicia.api.dto.CreateProductRequest;
 import co.com.gestorfranquicia.api.dto.FranchiseResponse;
 import co.com.gestorfranquicia.api.dto.ProductResponse;
+import co.com.gestorfranquicia.api.dto.UpdateStockRequest;
 import co.com.gestorfranquicia.api.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -105,6 +106,54 @@ public class RouterRest {
                                     @ApiResponse(responseCode = "404", description = "Branch not found",
                                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                                     @ApiResponse(responseCode = "409", description = "Product already exists",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "503", description = "Service unavailable",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/branches/{branchId}/products/{productId}",
+                    method = RequestMethod.DELETE,
+                    beanClass = Handler.class,
+                    beanMethod = "deleteProduct",
+                    operation = @Operation(
+                            operationId = "deleteProduct",
+                            summary = "Delete a product from a branch",
+                            parameters = {
+                                    @Parameter(name = "branchId", in = ParameterIn.PATH, required = true),
+                                    @Parameter(name = "productId", in = ParameterIn.PATH, required = true)
+                            },
+                            responses = {
+                                    @ApiResponse(responseCode = "204", description = "Product deleted"),
+                                    @ApiResponse(responseCode = "404", description = "Product not found",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "503", description = "Service unavailable",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/branches/{branchId}/products/{productId}/stock",
+                    method = RequestMethod.PATCH,
+                    beanClass = Handler.class,
+                    beanMethod = "updateProductStock",
+                    operation = @Operation(
+                            operationId = "updateProductStock",
+                            summary = "Update the stock of a product",
+                            parameters = {
+                                    @Parameter(name = "branchId", in = ParameterIn.PATH, required = true),
+                                    @Parameter(name = "productId", in = ParameterIn.PATH, required = true)
+                            },
+                            requestBody = @RequestBody(
+                                    required = true,
+                                    content = @Content(schema = @Schema(implementation = UpdateStockRequest.class))),
+                            responses = {
+                                    @ApiResponse(responseCode = "200", description = "Stock updated",
+                                            content = @Content(schema = @Schema(implementation = ProductResponse.class))),
+                                    @ApiResponse(responseCode = "400", description = "Invalid request",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "404", description = "Product not found",
                                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                                     @ApiResponse(responseCode = "503", description = "Service unavailable",
                                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))

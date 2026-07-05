@@ -24,28 +24,13 @@ import java.net.URI;
 @Component
 @RequiredArgsConstructor
 public class Handler {
-//private  final UseCase useCase;
-//private  final UseCase2 useCase2;
 
     private final FranchiseUseCase franchiseUseCase;
     private final BranchUseCase branchUseCase;
     private final ProductUseCase productUseCase;
     private final RequestValidator requestValidator;
 
-    public Mono<ServerResponse> listenGETUseCase(ServerRequest serverRequest) {
-        // useCase.logic();
-        return ServerResponse.ok().bodyValue("");
-    }
 
-    public Mono<ServerResponse> listenGETOtherUseCase(ServerRequest serverRequest) {
-        // useCase2.logic();
-        return ServerResponse.ok().bodyValue("");
-    }
-
-    public Mono<ServerResponse> listenPOSTUseCase(ServerRequest serverRequest) {
-        // useCase.logic();
-        return ServerResponse.ok().bodyValue("");
-    }
 
     @CircuitBreaker(name = "franchiseCreate")
     public Mono<ServerResponse> createFranchise(ServerRequest serverRequest) {

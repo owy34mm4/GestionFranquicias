@@ -32,6 +32,11 @@ public class FranchiseReactiveRepositoryAdapter implements FranchiseRepository {
         return repository.findAll().map(this::toEntity);
     }
 
+    @Override
+    public Mono<Boolean> existsByName(String name) {
+        return repository.existsByName(name);
+    }
+
     private FranchiseData toData(Franchise franchise) {
         return FranchiseData.builder()
                 .id(franchise.getId())

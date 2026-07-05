@@ -38,6 +38,26 @@ public class ProductReactiveRepositoryAdapter implements ProductRepository {
         return repository.validateForCreation(name, branchId).map(CreationCheck::valueOf);
     }
 
+    @Override
+    public Mono<Boolean> existsByIdAndBranchId(Long id, Long branchId) {
+        return repository.existsByIdAndBranchId(id, branchId);
+    }
+
+    @Override
+    public Mono<Void> deleteById(Long id) {
+        return repository.deleteById(id);
+    }
+
+    @Override
+    public Mono<Product> findByIdAndBranchId(Long id, Long branchId) {
+        return repository.findByIdAndBranchId(id, branchId).map(this::toEntity);
+    }
+
+    @Override
+    public Mono<Void> updateStock(Long id, Integer stock) {
+        return repository.updateStock(id, stock);
+    }
+
     private ProductData toData(Product product) {
         return ProductData.builder()
                 .id(product.getId())

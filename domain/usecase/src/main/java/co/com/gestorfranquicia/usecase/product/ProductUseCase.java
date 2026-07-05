@@ -27,4 +27,11 @@ public class ProductUseCase {
                 .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.PRODUCT_NOT_FOUND)))
                 .then(productRepository.deleteById(productId));
     }
+
+    public Mono<Product> updateStock(Long productId, Long branchId, Integer newStock) {
+        return productRepository.findByIdAndBranchId(productId, branchId)
+                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.PRODUCT_NOT_FOUND)))
+                .flatMap(product -> Mono.fromCallable(() -> product.changeStock(newStock)))
+                .flatMap(updated -> productRepository.updateStock(updated.getId(), updated.getStock()).thenReturn(updated));
+    }
 }

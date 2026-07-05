@@ -33,7 +33,7 @@ public class RouterRest {
 
     @RouterOperations({
             @RouterOperation(
-                    path = "/api/fanchise",
+                    path = "/api/franchise",
                     method = RequestMethod.POST,
                     beanClass = Handler.class,
                     beanMethod = "createFranchise",
@@ -56,7 +56,7 @@ public class RouterRest {
                     )
             ),
             @RouterOperation(
-                    path = "/api/fanchise/{franchiseId}/branch",
+                    path = "/api/franchise/{franchiseId}/branch",
                     method = RequestMethod.POST,
                     beanClass = Handler.class,
                     beanMethod = "createBranch",
@@ -136,9 +136,9 @@ public class RouterRest {
                     path = "/api/branch/{branchId}/product/{productId}/stock",
                     method = RequestMethod.PATCH,
                     beanClass = Handler.class,
-                    beanMethod = "updateproducttock",
+                    beanMethod = "updateProductStock",
                     operation = @Operation(
-                            operationId = "updateproducttock",
+                            operationId = "updateProductStock",
                             summary = "Update the stock of a product",
                             parameters = {
                                     @Parameter(name = "branchId", in = ParameterIn.PATH, required = true),
@@ -162,8 +162,8 @@ public class RouterRest {
     })
     @Bean
     public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-        return route(POST("/api/fanchise"), handler::createFranchise)
-                .andRoute(POST("/api/fanchise/{franchiseId}/branch"), handler::createBranch)
+        return route(POST("/api/franchise"), handler::createFranchise)
+                .andRoute(POST("/api/franchise/{franchiseId}/branch"), handler::createBranch)
                 .andRoute(POST("/api/branch/{branchId}/product"), handler::createProduct)
                 .andRoute(DELETE("/api/branch/{branchId}/product/{productId}"), handler::deleteProduct)
                 .andRoute(PATCH("/api/branch/{branchId}/product/{productId}/stock"), handler::updateProductStock);

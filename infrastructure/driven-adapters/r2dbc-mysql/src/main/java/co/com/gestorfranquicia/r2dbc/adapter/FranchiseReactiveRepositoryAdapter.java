@@ -1,7 +1,9 @@
 package co.com.gestorfranquicia.r2dbc.adapter;
 
+import co.com.gestorfranquicia.model.branchtopproduct.BranchTopProduct;
 import co.com.gestorfranquicia.model.franchise.Franchise;
 import co.com.gestorfranquicia.model.franchise.gateways.FranchiseRepository;
+import co.com.gestorfranquicia.r2dbc.data.BranchTopProductData;
 import co.com.gestorfranquicia.r2dbc.data.FranchiseData;
 import co.com.gestorfranquicia.r2dbc.repository.FranchiseReactiveRepository;
 import org.springframework.stereotype.Repository;
@@ -35,6 +37,21 @@ public class FranchiseReactiveRepositoryAdapter implements FranchiseRepository {
     @Override
     public Mono<Boolean> existsByName(String name) {
         return repository.existsByName(name);
+    }
+
+    @Override
+    public Mono<Boolean> existsById(Long id) {
+        return repository.existsById(id);
+    }
+
+    @Override
+    public Flux<BranchTopProduct> findTopStockPerBranch(Long franchiseId) {
+        return repository.findTopStockPerBranch(franchiseId).map(this::toReadModel);
+    }
+
+    private BranchTopProduct toReadModel(BranchTopProductData data) {
+        return BranchTopProduct.reconstitute(data.getBranchId(), data.getBranchName(),
+                data.getProductId(), data.getProductName(), data.getStock());
     }
 
     private FranchiseData toData(Franchise franchise) {

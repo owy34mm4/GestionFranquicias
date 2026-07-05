@@ -1,6 +1,7 @@
 package co.com.gestorfranquicia.api;
 
 import co.com.gestorfranquicia.api.dto.BranchResponse;
+import co.com.gestorfranquicia.api.dto.BranchTopProductResponse;
 import co.com.gestorfranquicia.api.dto.CreateBranchRequest;
 import co.com.gestorfranquicia.api.dto.CreateFranchiseRequest;
 import co.com.gestorfranquicia.api.dto.CreateProductRequest;
@@ -38,7 +39,7 @@ public class Handler {
                 .flatMap(requestValidator::validate)
                 .flatMap(request -> franchiseUseCase.create(request.name()))
                 .flatMap(franchise -> ServerResponse
-                        .created(URI.create("/api/franchises/" + franchise.getId()))
+                        .created(URI.create("/api/franchise/" + franchise.getId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(new FranchiseResponse(franchise.getId(), franchise.getName())));
     }
@@ -50,7 +51,7 @@ public class Handler {
                 .flatMap(requestValidator::validate)
                 .flatMap(request -> branchUseCase.create(request.name(), franchiseId))
                 .flatMap(branch -> ServerResponse
-                        .created(URI.create("/api/branches/" + branch.getId()))
+                        .created(URI.create("/api/branch/" + branch.getId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(new BranchResponse(branch.getId(), branch.getName(), branch.getFranchiseId())));
     }
@@ -62,7 +63,7 @@ public class Handler {
                 .flatMap(requestValidator::validate)
                 .flatMap(request -> productUseCase.create(request.name(), request.stock(), branchId))
                 .flatMap(product -> ServerResponse
-                        .created(URI.create("/api/products/" + product.getId()))
+                        .created(URI.create("/api/product/" + product.getId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(new ProductResponse(product.getId(), product.getName(), product.getStock(), product.getBranchId())));
     }
@@ -85,5 +86,17 @@ public class Handler {
                 .flatMap(product -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(new ProductResponse(product.getId(), product.getName(), product.getStock(), product.getBranchId())));
+    }
+
+    @CircuitBreaker(name = "franchiseTopStock")
+    public Mono<ServerResponse> topStockByFranchise(ServerRequest serverRequest) {
+        Long franchiseId = Long.valueOf(serverRequest.pathVariable("franchiseId"));
+        return franchiseUseCase.topStockPerBranch(franchiseId)
+                .map(item -> new BranchTopProductResponse(item.getBranchId(), item.getBranchName(),
+                        item.getProductId(), item.getProductName(), item.getStock()))
+                .collectList()
+                .flatMap(list -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(list));
     }
 }

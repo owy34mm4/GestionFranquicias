@@ -1,5 +1,6 @@
 package co.com.gestorfranquicia.r2dbc.adapter;
 
+import co.com.gestorfranquicia.model.enums.CreationCheck;
 import co.com.gestorfranquicia.model.product.Product;
 import co.com.gestorfranquicia.model.product.gateways.ProductRepository;
 import co.com.gestorfranquicia.r2dbc.data.ProductData;
@@ -30,6 +31,11 @@ public class ProductReactiveRepositoryAdapter implements ProductRepository {
     @Override
     public Flux<Product> findAll() {
         return repository.findAll().map(this::toEntity);
+    }
+
+    @Override
+    public Mono<CreationCheck> validateForCreation(String name, Long branchId) {
+        return repository.validateForCreation(name, branchId).map(CreationCheck::valueOf);
     }
 
     private ProductData toData(Product product) {

@@ -1,6 +1,7 @@
 package co.com.gestorfranquicia.api;
 
 import co.com.gestorfranquicia.api.dto.BranchResponse;
+import co.com.gestorfranquicia.api.dto.BranchTopProductResponse;
 import co.com.gestorfranquicia.api.dto.CreateBranchRequest;
 import co.com.gestorfranquicia.api.dto.CreateFranchiseRequest;
 import co.com.gestorfranquicia.api.dto.CreateProductRequest;
@@ -85,5 +86,16 @@ public class Handler {
                 .flatMap(product -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(new ProductResponse(product.getId(), product.getName(), product.getStock(), product.getBranchId())));
+    }
+
+    public Mono<ServerResponse> topStockByFranchise(ServerRequest serverRequest) {
+        Long franchiseId = Long.valueOf(serverRequest.pathVariable("franchiseId"));
+        return franchiseUseCase.topStockPerBranch(franchiseId)
+                .map(item -> new BranchTopProductResponse(item.getBranchId(), item.getBranchName(),
+                        item.getProductId(), item.getProductName(), item.getStock()))
+                .collectList()
+                .flatMap(list -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(list));
     }
 }

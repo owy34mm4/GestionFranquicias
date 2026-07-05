@@ -20,4 +20,14 @@ public class BranchUseCase {
                     case ALLOWED -> branchRepository.save(Branch.create(name, franchiseId));
                 });
     }
+
+    public Mono<Void> updateName(Long branchId, String newName) {
+        return branchRepository.validateForRename(newName, branchId)
+                .flatMap(check -> switch (check) {
+                    case NOT_FOUND -> Mono.<Void>error(new BusinessException(TechnicalMessage.BRANCH_NOT_FOUND));
+                    case ALREADY_EXISTS -> Mono.<Void>error(new BusinessException(TechnicalMessage.BRANCH_ALREADY_EXISTS));
+                    case ALLOWED -> Mono.fromCallable(() -> Branch.builder().id(branchId).build().changeName(newName))
+                            .flatMap(renamed -> branchRepository.updateName(renamed.getId(), renamed.getName()));
+                });
+    }
 }

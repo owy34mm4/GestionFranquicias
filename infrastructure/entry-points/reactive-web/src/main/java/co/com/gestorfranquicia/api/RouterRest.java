@@ -192,6 +192,9 @@ public class RouterRest {
                 .andRoute(POST("/api/branch/{branchId}/product"), handler::createProduct)
                 .andRoute(DELETE("/api/branch/{branchId}/product/{productId}"), handler::deleteProduct)
                 .andRoute(PATCH("/api/branch/{branchId}/product/{productId}/stock"), handler::updateProductStock)
-                .andRoute(GET("/api/franchise/{franchiseId}/top-stock-product"), handler::topStockByFranchise);
+                .andRoute(GET("/api/franchise/{franchiseId}/top-stock-product"), handler::topStockByFranchise)
+                .andRoute(PATCH("/api/franchise/{franchiseId}/name"), handler::updateFranchiseName)
+                .andRoute(PATCH("/api/branch/{branchId}/name"), handler::updateBranchName)
+                .andRoute(PATCH("/api/branch/{branchId}/product/{productId}/name"), handler::updateProductName);
     }
 }

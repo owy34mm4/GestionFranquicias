@@ -82,6 +82,7 @@ public class Handler {
                         .bodyValue(new ProductResponse(product.getId(), product.getName(), product.getStock(), product.getBranchId())));
     }
 
+    @CircuitBreaker(name = "productDelete")
     public Mono<ServerResponse> deleteProduct(ServerRequest serverRequest) {
         Long branchId = Long.valueOf(serverRequest.pathVariable("branchId"));
         Long productId = Long.valueOf(serverRequest.pathVariable("productId"));
@@ -89,6 +90,7 @@ public class Handler {
                 .then(ServerResponse.noContent().build());
     }
 
+    @CircuitBreaker(name = "productStockUpdate")
     public Mono<ServerResponse> updateProductStock(ServerRequest serverRequest) {
         Long branchId = Long.valueOf(serverRequest.pathVariable("branchId"));
         Long productId = Long.valueOf(serverRequest.pathVariable("productId"));

@@ -1,6 +1,7 @@
 package co.com.gestorfranquicia.r2dbc.adapter;
 
 import co.com.gestorfranquicia.model.enums.CreationCheck;
+import co.com.gestorfranquicia.model.enums.RenameCheck;
 import co.com.gestorfranquicia.model.product.Product;
 import co.com.gestorfranquicia.model.product.gateways.ProductRepository;
 import co.com.gestorfranquicia.r2dbc.data.ProductData;
@@ -56,6 +57,16 @@ public class ProductReactiveRepositoryAdapter implements ProductRepository {
     @Override
     public Mono<Void> updateStock(Long id, Integer stock) {
         return repository.updateStock(id, stock);
+    }
+
+    @Override
+    public Mono<RenameCheck> validateForRename(String newName, Long branchId, Long id) {
+        return repository.validateForRename(newName, branchId, id).map(RenameCheck::valueOf);
+    }
+
+    @Override
+    public Mono<Void> updateName(Long id, String name) {
+        return repository.updateName(id, name);
     }
 
     private ProductData toData(Product product) {

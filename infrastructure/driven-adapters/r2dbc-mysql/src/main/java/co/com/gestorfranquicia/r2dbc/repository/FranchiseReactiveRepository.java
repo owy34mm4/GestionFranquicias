@@ -2,6 +2,7 @@ package co.com.gestorfranquicia.r2dbc.repository;
 
 import co.com.gestorfranquicia.r2dbc.data.BranchTopProductData;
 import co.com.gestorfranquicia.r2dbc.data.FranchiseData;
+import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.repository.query.Param;
@@ -18,4 +19,14 @@ public interface FranchiseReactiveRepository extends R2dbcRepository<FranchiseDa
             "WHERE b.franchise_id = :franchiseId) ranked " +
             "WHERE ranked.rn = 1 ORDER BY branch_id")
     Flux<BranchTopProductData> findTopStockPerBranch(@Param("franchiseId") Long franchiseId);
+
+    @Query("SELECT CASE " +
+            "WHEN NOT EXISTS (SELECT 1 FROM franchise WHERE id = :id) THEN 'NOT_FOUND' " +
+            "WHEN EXISTS (SELECT 1 FROM franchise WHERE name = :name AND id <> :id) THEN 'ALREADY_EXISTS' " +
+            "ELSE 'ALLOWED' END")
+    Mono<String> validateForRename(@Param("name") String name, @Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE franchise SET name = :name WHERE id = :id")
+    Mono<Void> updateName(@Param("id") Long id, @Param("name") String name);
 }

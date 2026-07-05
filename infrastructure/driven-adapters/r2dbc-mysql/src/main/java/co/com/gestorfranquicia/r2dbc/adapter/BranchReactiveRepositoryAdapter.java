@@ -3,6 +3,7 @@ package co.com.gestorfranquicia.r2dbc.adapter;
 import co.com.gestorfranquicia.model.branch.Branch;
 import co.com.gestorfranquicia.model.branch.gateways.BranchRepository;
 import co.com.gestorfranquicia.model.enums.CreationCheck;
+import co.com.gestorfranquicia.model.enums.RenameCheck;
 import co.com.gestorfranquicia.r2dbc.data.BranchData;
 import co.com.gestorfranquicia.r2dbc.repository.BranchReactiveRepository;
 import org.springframework.stereotype.Repository;
@@ -36,6 +37,16 @@ public class BranchReactiveRepositoryAdapter implements BranchRepository {
     @Override
     public Mono<CreationCheck> validateForCreation(String name, Long franchiseId) {
         return repository.validateForCreation(name, franchiseId).map(CreationCheck::valueOf);
+    }
+
+    @Override
+    public Mono<RenameCheck> validateForRename(String newName, Long id) {
+        return repository.validateForRename(newName, id).map(RenameCheck::valueOf);
+    }
+
+    @Override
+    public Mono<Void> updateName(Long id, String name) {
+        return repository.updateName(id, name);
     }
 
     private BranchData toData(Branch branch) {

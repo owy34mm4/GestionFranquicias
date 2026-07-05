@@ -1,6 +1,7 @@
 package co.com.gestorfranquicia.model.product.gateways;
 
 import co.com.gestorfranquicia.model.enums.CreationCheck;
+import co.com.gestorfranquicia.model.enums.RenameCheck;
 import co.com.gestorfranquicia.model.product.Product;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -14,4 +15,6 @@ public interface ProductRepository {
     Mono<Void> deleteById(Long id);
     Mono<Product> findByIdAndBranchId(Long id, Long branchId);
     Mono<Void> updateStock(Long id, Integer stock);
+    Mono<RenameCheck> validateForRename(String newName, Long branchId, Long id);
+    Mono<Void> updateName(Long id, String name);
 }

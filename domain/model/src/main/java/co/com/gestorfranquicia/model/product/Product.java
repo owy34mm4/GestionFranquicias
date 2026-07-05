@@ -41,4 +41,11 @@ public class Product {
                 .branchId(branchId)
                 .build();
     }
+
+    public Product changeStock(Integer newStock) {
+        if (newStock == null || newStock < 0) {
+            throw new BusinessException(TechnicalMessage.PRODUCT_STOCK_INVALID);
+        }
+        return this.toBuilder().stock(newStock).build();
+    }
 }

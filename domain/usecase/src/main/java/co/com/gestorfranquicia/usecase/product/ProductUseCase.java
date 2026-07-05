@@ -20,4 +20,18 @@ public class ProductUseCase {
                     case ALLOWED -> productRepository.save(Product.create(name, stock, branchId));
                 });
     }
+
+    public Mono<Void> delete(Long productId, Long branchId) {
+        return productRepository.existsByIdAndBranchId(productId, branchId)
+                .filter(exists -> exists)
+                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.PRODUCT_NOT_FOUND)))
+                .then(productRepository.deleteById(productId));
+    }
+
+    public Mono<Product> updateStock(Long productId, Long branchId, Integer newStock) {
+        return productRepository.findByIdAndBranchId(productId, branchId)
+                .switchIfEmpty(Mono.error(new BusinessException(TechnicalMessage.PRODUCT_NOT_FOUND)))
+                .flatMap(product -> Mono.fromCallable(() -> product.changeStock(newStock)))
+                .flatMap(updated -> productRepository.updateStock(updated.getId(), updated.getStock()).thenReturn(updated));
+    }
 }

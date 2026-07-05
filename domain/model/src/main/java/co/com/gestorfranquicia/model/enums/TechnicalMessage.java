@@ -21,7 +21,8 @@ public enum TechnicalMessage {
     PRODUCT_NAME_REQUIRED("400", "Product name is required", "name"),
     PRODUCT_STOCK_INVALID("400", "Product stock must be zero or positive", "stock"),
     BRANCH_NOT_FOUND("404", "Branch not found", "branchId"),
-    PRODUCT_ALREADY_EXISTS("409", "Product already exists in this branch", "name");
+    PRODUCT_ALREADY_EXISTS("409", "Product already exists in this branch", "name"),
+    PRODUCT_NOT_FOUND("404", "Product not found", "productId");
 
     private final String code;
     private final String message;

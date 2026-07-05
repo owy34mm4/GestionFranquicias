@@ -10,4 +10,8 @@ public interface ProductRepository {
     Mono<Product> findById(Long id);
     Flux<Product> findAll();
     Mono<CreationCheck> validateForCreation(String name, Long branchId);
+    Mono<Boolean> existsByIdAndBranchId(Long id, Long branchId);
+    Mono<Void> deleteById(Long id);
+    Mono<Product> findByIdAndBranchId(Long id, Long branchId);
+    Mono<Void> updateStock(Long id, Integer stock);
 }

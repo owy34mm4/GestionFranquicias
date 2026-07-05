@@ -1,6 +1,7 @@
 package co.com.gestorfranquicia.api;
 
 import co.com.gestorfranquicia.api.dto.BranchResponse;
+import co.com.gestorfranquicia.api.dto.BranchTopProductResponse;
 import co.com.gestorfranquicia.api.dto.CreateBranchRequest;
 import co.com.gestorfranquicia.api.dto.CreateFranchiseRequest;
 import co.com.gestorfranquicia.api.dto.CreateProductRequest;
@@ -11,6 +12,7 @@ import co.com.gestorfranquicia.api.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -154,6 +156,28 @@ public class RouterRest {
                                     @ApiResponse(responseCode = "400", description = "Invalid request",
                                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                                     @ApiResponse(responseCode = "404", description = "Product not found",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "503", description = "Service unavailable",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            }
+                    )
+            )
+            ,
+            @RouterOperation(
+                    path = "/api/franchise/{franchiseId}/top-stock-product",
+                    method = RequestMethod.GET,
+                    beanClass = Handler.class,
+                    beanMethod = "topStockByFranchise",
+                    operation = @Operation(
+                            operationId = "topStockByFranchise",
+                            summary = "Get the highest-stock product per branch within a franchise",
+                            parameters = {
+                                    @Parameter(name = "franchiseId", in = ParameterIn.PATH, required = true)
+                            },
+                            responses = {
+                                    @ApiResponse(responseCode = "200", description = "Top stock product per branch",
+                                            content = @Content(array = @ArraySchema(schema = @Schema(implementation = BranchTopProductResponse.class)))),
+                                    @ApiResponse(responseCode = "404", description = "Franchise not found",
                                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                                     @ApiResponse(responseCode = "503", description = "Service unavailable",
                                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))

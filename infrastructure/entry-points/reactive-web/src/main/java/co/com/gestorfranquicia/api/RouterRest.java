@@ -1,9 +1,15 @@
 package co.com.gestorfranquicia.api;
 
+import co.com.gestorfranquicia.api.dto.BranchResponse;
+import co.com.gestorfranquicia.api.dto.CreateBranchRequest;
 import co.com.gestorfranquicia.api.dto.CreateFranchiseRequest;
+import co.com.gestorfranquicia.api.dto.CreateProductRequest;
 import co.com.gestorfranquicia.api.dto.FranchiseResponse;
+import co.com.gestorfranquicia.api.dto.ProductResponse;
 import co.com.gestorfranquicia.api.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -41,6 +47,62 @@ public class RouterRest {
                                     @ApiResponse(responseCode = "400", description = "Invalid request",
                                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                                     @ApiResponse(responseCode = "409", description = "Franchise already exists",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "503", description = "Service unavailable",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/franchises/{franchiseId}/branches",
+                    method = RequestMethod.POST,
+                    beanClass = Handler.class,
+                    beanMethod = "createBranch",
+                    operation = @Operation(
+                            operationId = "createBranch",
+                            summary = "Add a branch to a franchise",
+                            parameters = {
+                                    @Parameter(name = "franchiseId", in = ParameterIn.PATH, required = true)
+                            },
+                            requestBody = @RequestBody(
+                                    required = true,
+                                    content = @Content(schema = @Schema(implementation = CreateBranchRequest.class))),
+                            responses = {
+                                    @ApiResponse(responseCode = "201", description = "Branch created",
+                                            content = @Content(schema = @Schema(implementation = BranchResponse.class))),
+                                    @ApiResponse(responseCode = "400", description = "Invalid request",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "404", description = "Franchise not found",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "409", description = "Branch already exists",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "503", description = "Service unavailable",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/branches/{branchId}/products",
+                    method = RequestMethod.POST,
+                    beanClass = Handler.class,
+                    beanMethod = "createProduct",
+                    operation = @Operation(
+                            operationId = "createProduct",
+                            summary = "Add a product to a branch",
+                            parameters = {
+                                    @Parameter(name = "branchId", in = ParameterIn.PATH, required = true)
+                            },
+                            requestBody = @RequestBody(
+                                    required = true,
+                                    content = @Content(schema = @Schema(implementation = CreateProductRequest.class))),
+                            responses = {
+                                    @ApiResponse(responseCode = "201", description = "Product created",
+                                            content = @Content(schema = @Schema(implementation = ProductResponse.class))),
+                                    @ApiResponse(responseCode = "400", description = "Invalid request",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "404", description = "Branch not found",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "409", description = "Product already exists",
                                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                                     @ApiResponse(responseCode = "503", description = "Service unavailable",
                                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))

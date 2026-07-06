@@ -101,6 +101,7 @@ public class Handler {
                         .bodyValue(list));
     }
 
+    @CircuitBreaker(name = "franchiseNameUpdate")
     public Mono<ServerResponse> updateFranchiseName(ServerRequest serverRequest) {
         Long franchiseId = Long.valueOf(serverRequest.pathVariable("franchiseId"));
         return serverRequest.bodyToMono(UpdateNameRequest.class)
@@ -109,6 +110,7 @@ public class Handler {
                 .then(ServerResponse.noContent().build());
     }
 
+    @CircuitBreaker(name = "branchNameUpdate")
     public Mono<ServerResponse> updateBranchName(ServerRequest serverRequest) {
         Long branchId = Long.valueOf(serverRequest.pathVariable("branchId"));
         return serverRequest.bodyToMono(UpdateNameRequest.class)
@@ -117,6 +119,7 @@ public class Handler {
                 .then(ServerResponse.noContent().build());
     }
 
+    @CircuitBreaker(name = "productNameUpdate")
     public Mono<ServerResponse> updateProductName(ServerRequest serverRequest) {
         Long branchId = Long.valueOf(serverRequest.pathVariable("branchId"));
         Long productId = Long.valueOf(serverRequest.pathVariable("productId"));

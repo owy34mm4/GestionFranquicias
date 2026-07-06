@@ -7,6 +7,7 @@ import co.com.gestorfranquicia.api.dto.CreateFranchiseRequest;
 import co.com.gestorfranquicia.api.dto.CreateProductRequest;
 import co.com.gestorfranquicia.api.dto.FranchiseResponse;
 import co.com.gestorfranquicia.api.dto.ProductResponse;
+import co.com.gestorfranquicia.api.dto.UpdateNameRequest;
 import co.com.gestorfranquicia.api.dto.UpdateStockRequest;
 import co.com.gestorfranquicia.api.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -178,6 +179,88 @@ public class RouterRest {
                                     @ApiResponse(responseCode = "200", description = "Top stock product per branch",
                                             content = @Content(array = @ArraySchema(schema = @Schema(implementation = BranchTopProductResponse.class)))),
                                     @ApiResponse(responseCode = "404", description = "Franchise not found",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "503", description = "Service unavailable",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/franchise/{franchiseId}/name",
+                    method = RequestMethod.PATCH,
+                    beanClass = Handler.class,
+                    beanMethod = "updateFranchiseName",
+                    operation = @Operation(
+                            operationId = "updateFranchiseName",
+                            summary = "Update the name of a franchise",
+                            parameters = {
+                                    @Parameter(name = "franchiseId", in = ParameterIn.PATH, required = true)
+                            },
+                            requestBody = @RequestBody(
+                                    required = true,
+                                    content = @Content(schema = @Schema(implementation = UpdateNameRequest.class))),
+                            responses = {
+                                    @ApiResponse(responseCode = "204", description = "Name updated"),
+                                    @ApiResponse(responseCode = "400", description = "Invalid request",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "404", description = "Franchise not found",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "409", description = "Franchise already exists",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "503", description = "Service unavailable",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/branch/{branchId}/name",
+                    method = RequestMethod.PATCH,
+                    beanClass = Handler.class,
+                    beanMethod = "updateBranchName",
+                    operation = @Operation(
+                            operationId = "updateBranchName",
+                            summary = "Update the name of a branch",
+                            parameters = {
+                                    @Parameter(name = "branchId", in = ParameterIn.PATH, required = true)
+                            },
+                            requestBody = @RequestBody(
+                                    required = true,
+                                    content = @Content(schema = @Schema(implementation = UpdateNameRequest.class))),
+                            responses = {
+                                    @ApiResponse(responseCode = "204", description = "Name updated"),
+                                    @ApiResponse(responseCode = "400", description = "Invalid request",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "404", description = "Branch not found",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "409", description = "Branch already exists in this franchise",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "503", description = "Service unavailable",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                            }
+                    )
+            ),
+            @RouterOperation(
+                    path = "/api/branch/{branchId}/product/{productId}/name",
+                    method = RequestMethod.PATCH,
+                    beanClass = Handler.class,
+                    beanMethod = "updateProductName",
+                    operation = @Operation(
+                            operationId = "updateProductName",
+                            summary = "Update the name of a product",
+                            parameters = {
+                                    @Parameter(name = "branchId", in = ParameterIn.PATH, required = true),
+                                    @Parameter(name = "productId", in = ParameterIn.PATH, required = true)
+                            },
+                            requestBody = @RequestBody(
+                                    required = true,
+                                    content = @Content(schema = @Schema(implementation = UpdateNameRequest.class))),
+                            responses = {
+                                    @ApiResponse(responseCode = "204", description = "Name updated"),
+                                    @ApiResponse(responseCode = "400", description = "Invalid request",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "404", description = "Product not found",
+                                            content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                                    @ApiResponse(responseCode = "409", description = "Product already exists in this branch",
                                             content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
                                     @ApiResponse(responseCode = "503", description = "Service unavailable",
                                             content = @Content(schema = @Schema(implementation = ErrorResponse.class)))

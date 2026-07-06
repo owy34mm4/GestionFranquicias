@@ -1,0 +1,51 @@
+name: Terraform
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Terraform action to run
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+        required: true
+
+permissions:
+  contents: read
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: us-east-1
+  TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        working-directory: deployment/terraform
+        run: terraform init
+
+      - name: Terraform plan
+        if: inputs.action == 'plan'
+        working-directory: deployment/terraform
+        run: terraform plan
+
+      - name: Terraform apply
+        if: inputs.action == 'apply'
+        working-directory: deployment/terraform
+        run: terraform apply -auto-approve
+
+      - name: Terraform destroy
+        if: inputs.action == 'destroy'
+        working-directory: deployment/terraform
+        run: terraform destroy -auto-approve

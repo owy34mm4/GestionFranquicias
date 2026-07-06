@@ -32,4 +32,11 @@ public class Franchise {
                 .name(name)
                 .build();
     }
+
+    public Franchise changeName(String newName) {
+        if (newName == null || newName.isBlank()) {
+            throw new BusinessException(TechnicalMessage.FRANCHISE_NAME_REQUIRED);
+        }
+        return this.toBuilder().name(newName.trim()).build();
+    }
 }

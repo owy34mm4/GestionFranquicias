@@ -7,6 +7,7 @@ import co.com.gestorfranquicia.api.dto.CreateFranchiseRequest;
 import co.com.gestorfranquicia.api.dto.CreateProductRequest;
 import co.com.gestorfranquicia.api.dto.FranchiseResponse;
 import co.com.gestorfranquicia.api.dto.ProductResponse;
+import co.com.gestorfranquicia.api.dto.UpdateNameRequest;
 import co.com.gestorfranquicia.api.dto.UpdateStockRequest;
 import co.com.gestorfranquicia.api.validation.RequestValidator;
 import co.com.gestorfranquicia.usecase.branch.BranchUseCase;
@@ -98,5 +99,33 @@ public class Handler {
                 .flatMap(list -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(list));
+    }
+
+    @CircuitBreaker(name = "franchiseNameUpdate")
+    public Mono<ServerResponse> updateFranchiseName(ServerRequest serverRequest) {
+        Long franchiseId = Long.valueOf(serverRequest.pathVariable("franchiseId"));
+        return serverRequest.bodyToMono(UpdateNameRequest.class)
+                .flatMap(requestValidator::validate)
+                .flatMap(request -> franchiseUseCase.updateName(franchiseId, request.name()))
+                .then(ServerResponse.noContent().build());
+    }
+
+    @CircuitBreaker(name = "branchNameUpdate")
+    public Mono<ServerResponse> updateBranchName(ServerRequest serverRequest) {
+        Long branchId = Long.valueOf(serverRequest.pathVariable("branchId"));
+        return serverRequest.bodyToMono(UpdateNameRequest.class)
+                .flatMap(requestValidator::validate)
+                .flatMap(request -> branchUseCase.updateName(branchId, request.name()))
+                .then(ServerResponse.noContent().build());
+    }
+
+    @CircuitBreaker(name = "productNameUpdate")
+    public Mono<ServerResponse> updateProductName(ServerRequest serverRequest) {
+        Long branchId = Long.valueOf(serverRequest.pathVariable("branchId"));
+        Long productId = Long.valueOf(serverRequest.pathVariable("productId"));
+        return serverRequest.bodyToMono(UpdateNameRequest.class)
+                .flatMap(requestValidator::validate)
+                .flatMap(request -> productUseCase.updateName(productId, branchId, request.name()))
+                .then(ServerResponse.noContent().build());
     }
 }

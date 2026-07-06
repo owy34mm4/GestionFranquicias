@@ -48,4 +48,11 @@ public class Product {
         }
         return this.toBuilder().stock(newStock).build();
     }
+
+    public Product changeName(String newName) {
+        if (newName == null || newName.isBlank()) {
+            throw new BusinessException(TechnicalMessage.PRODUCT_NAME_REQUIRED);
+        }
+        return this.toBuilder().name(newName.trim()).build();
+    }
 }

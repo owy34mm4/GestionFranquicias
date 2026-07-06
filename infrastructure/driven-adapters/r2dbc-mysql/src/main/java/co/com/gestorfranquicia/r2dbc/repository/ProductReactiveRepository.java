@@ -22,4 +22,14 @@ public interface ProductReactiveRepository extends R2dbcRepository<ProductData, 
     @Modifying
     @Query("UPDATE product SET stock = :stock WHERE id = :id")
     Mono<Void> updateStock(@Param("id") Long id, @Param("stock") Integer stock);
+
+    @Query("SELECT CASE " +
+            "WHEN NOT EXISTS (SELECT 1 FROM product WHERE id = :id AND branch_id = :branchId) THEN 'NOT_FOUND' " +
+            "WHEN EXISTS (SELECT 1 FROM product WHERE name = :name AND branch_id = :branchId AND id <> :id) THEN 'ALREADY_EXISTS' " +
+            "ELSE 'ALLOWED' END")
+    Mono<String> validateForRename(@Param("name") String name, @Param("branchId") Long branchId, @Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE product SET name = :name WHERE id = :id")
+    Mono<Void> updateName(@Param("id") Long id, @Param("name") String name);
 }

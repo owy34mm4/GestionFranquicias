@@ -34,4 +34,14 @@ public class ProductUseCase {
                 .flatMap(product -> Mono.fromCallable(() -> product.changeStock(newStock)))
                 .flatMap(updated -> productRepository.updateStock(updated.getId(), updated.getStock()).thenReturn(updated));
     }
+
+    public Mono<Void> updateName(Long productId, Long branchId, String newName) {
+        return productRepository.validateForRename(newName, branchId, productId)
+                .flatMap(check -> switch (check) {
+                    case NOT_FOUND -> Mono.<Void>error(new BusinessException(TechnicalMessage.PRODUCT_NOT_FOUND));
+                    case ALREADY_EXISTS -> Mono.<Void>error(new BusinessException(TechnicalMessage.PRODUCT_ALREADY_EXISTS));
+                    case ALLOWED -> Mono.fromCallable(() -> Product.builder().id(productId).branchId(branchId).build().changeName(newName))
+                            .flatMap(renamed -> productRepository.updateName(renamed.getId(), renamed.getName()));
+                });
+    }
 }

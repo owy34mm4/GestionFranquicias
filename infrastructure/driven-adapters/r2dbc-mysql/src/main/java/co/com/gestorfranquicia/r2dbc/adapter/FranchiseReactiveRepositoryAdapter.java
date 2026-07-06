@@ -1,6 +1,7 @@
 package co.com.gestorfranquicia.r2dbc.adapter;
 
 import co.com.gestorfranquicia.model.branchtopproduct.BranchTopProduct;
+import co.com.gestorfranquicia.model.enums.RenameCheck;
 import co.com.gestorfranquicia.model.franchise.Franchise;
 import co.com.gestorfranquicia.model.franchise.gateways.FranchiseRepository;
 import co.com.gestorfranquicia.r2dbc.data.BranchTopProductData;
@@ -47,6 +48,16 @@ public class FranchiseReactiveRepositoryAdapter implements FranchiseRepository {
     @Override
     public Flux<BranchTopProduct> findTopStockPerBranch(Long franchiseId) {
         return repository.findTopStockPerBranch(franchiseId).map(this::toReadModel);
+    }
+
+    @Override
+    public Mono<RenameCheck> validateForRename(String newName, Long id) {
+        return repository.validateForRename(newName, id).map(RenameCheck::valueOf);
+    }
+
+    @Override
+    public Mono<Void> updateName(Long id, String name) {
+        return repository.updateName(id, name);
     }
 
     private BranchTopProduct toReadModel(BranchTopProductData data) {

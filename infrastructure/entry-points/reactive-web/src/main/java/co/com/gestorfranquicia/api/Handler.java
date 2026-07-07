@@ -10,11 +10,14 @@ import co.com.gestorfranquicia.api.dto.ProductResponse;
 import co.com.gestorfranquicia.api.dto.UpdateNameRequest;
 import co.com.gestorfranquicia.api.dto.UpdateStockRequest;
 import co.com.gestorfranquicia.api.validation.RequestValidator;
+import co.com.gestorfranquicia.model.exception.BusinessException;
 import co.com.gestorfranquicia.usecase.branch.BranchUseCase;
 import co.com.gestorfranquicia.usecase.franchise.FranchiseUseCase;
 import co.com.gestorfranquicia.usecase.product.ProductUseCase;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -27,12 +30,12 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class Handler {
 
+    private static final Logger log = LoggerFactory.getLogger(Handler.class);
+
     private final FranchiseUseCase franchiseUseCase;
     private final BranchUseCase branchUseCase;
     private final ProductUseCase productUseCase;
     private final RequestValidator requestValidator;
-
-
 
     @CircuitBreaker(name = "franchiseCreate")
     public Mono<ServerResponse> createFranchise(ServerRequest serverRequest) {
@@ -42,7 +45,8 @@ public class Handler {
                 .flatMap(franchise -> ServerResponse
                         .created(URI.create("/api/franchise/" + franchise.getId()))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(new FranchiseResponse(franchise.getId(), franchise.getName())));
+                        .bodyValue(new FranchiseResponse(franchise.getId(), franchise.getName())))
+                .doOnError(error -> logError(serverRequest, error));
     }
 
     @CircuitBreaker(name = "branchCreate")
@@ -54,7 +58,8 @@ public class Handler {
                 .flatMap(branch -> ServerResponse
                         .created(URI.create("/api/branch/" + branch.getId()))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(new BranchResponse(branch.getId(), branch.getName(), branch.getFranchiseId())));
+                        .bodyValue(new BranchResponse(branch.getId(), branch.getName(), branch.getFranchiseId())))
+                .doOnError(error -> logError(serverRequest, error));
     }
 
     @CircuitBreaker(name = "productCreate")
@@ -66,7 +71,8 @@ public class Handler {
                 .flatMap(product -> ServerResponse
                         .created(URI.create("/api/product/" + product.getId()))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(new ProductResponse(product.getId(), product.getName(), product.getStock(), product.getBranchId())));
+                        .bodyValue(new ProductResponse(product.getId(), product.getName(), product.getStock(), product.getBranchId())))
+                .doOnError(error -> logError(serverRequest, error));
     }
 
     @CircuitBreaker(name = "productDelete")
@@ -74,7 +80,8 @@ public class Handler {
         Long branchId = Long.valueOf(serverRequest.pathVariable("branchId"));
         Long productId = Long.valueOf(serverRequest.pathVariable("productId"));
         return productUseCase.delete(productId, branchId)
-                .then(ServerResponse.noContent().build());
+                .then(ServerResponse.noContent().build())
+                .doOnError(error -> logError(serverRequest, error));
     }
 
     @CircuitBreaker(name = "productStockUpdate")
@@ -86,7 +93,8 @@ public class Handler {
                 .flatMap(request -> productUseCase.updateStock(productId, branchId, request.stock()))
                 .flatMap(product -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(new ProductResponse(product.getId(), product.getName(), product.getStock(), product.getBranchId())));
+                        .bodyValue(new ProductResponse(product.getId(), product.getName(), product.getStock(), product.getBranchId())))
+                .doOnError(error -> logError(serverRequest, error));
     }
 
     @CircuitBreaker(name = "franchiseTopStock")
@@ -98,7 +106,8 @@ public class Handler {
                 .collectList()
                 .flatMap(list -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(list));
+                        .bodyValue(list))
+                .doOnError(error -> logError(serverRequest, error));
     }
 
     @CircuitBreaker(name = "franchiseNameUpdate")
@@ -107,7 +116,8 @@ public class Handler {
         return serverRequest.bodyToMono(UpdateNameRequest.class)
                 .flatMap(requestValidator::validate)
                 .flatMap(request -> franchiseUseCase.updateName(franchiseId, request.name()))
-                .then(ServerResponse.noContent().build());
+                .then(ServerResponse.noContent().build())
+                .doOnError(error -> logError(serverRequest, error));
     }
 
     @CircuitBreaker(name = "branchNameUpdate")
@@ -116,7 +126,8 @@ public class Handler {
         return serverRequest.bodyToMono(UpdateNameRequest.class)
                 .flatMap(requestValidator::validate)
                 .flatMap(request -> branchUseCase.updateName(branchId, request.name()))
-                .then(ServerResponse.noContent().build());
+                .then(ServerResponse.noContent().build())
+                .doOnError(error -> logError(serverRequest, error));
     }
 
     @CircuitBreaker(name = "productNameUpdate")
@@ -126,6 +137,24 @@ public class Handler {
         return serverRequest.bodyToMono(UpdateNameRequest.class)
                 .flatMap(requestValidator::validate)
                 .flatMap(request -> productUseCase.updateName(productId, branchId, request.name()))
-                .then(ServerResponse.noContent().build());
+                .then(ServerResponse.noContent().build())
+                .doOnError(error -> logError(serverRequest, error));
+    }
+
+    private void logError(ServerRequest request, Throwable error) {
+        if (error instanceof BusinessException) {
+            log.atWarn()
+                    .addKeyValue("event", "error")
+                    .addKeyValue("method", request.method().name())
+                    .addKeyValue("path", request.path())
+                    .log("Peticion rechazada por regla de negocio");
+        } else {
+            log.atError()
+                    .setCause(error)
+                    .addKeyValue("event", "error")
+                    .addKeyValue("method", request.method().name())
+                    .addKeyValue("path", request.path())
+                    .log("Error procesando la peticion");
+        }
     }
 }

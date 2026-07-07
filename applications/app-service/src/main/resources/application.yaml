@@ -23,6 +23,12 @@ spring:
       mode: "always"
   profiles:
     include: null
+logging:
+  structured:
+    format:
+      console: ecs
+  level:
+    co.com.gestorfranquicia: INFO
 management:
   endpoints:
     web:

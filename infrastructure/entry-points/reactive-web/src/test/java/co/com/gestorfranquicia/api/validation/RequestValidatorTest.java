@@ -3,7 +3,7 @@ package co.com.gestorfranquicia.api.validation;
 import co.com.gestorfranquicia.api.dto.CreateFranchiseRequest;
 import co.com.gestorfranquicia.model.enums.TechnicalMessage;
 import co.com.gestorfranquicia.model.exception.BusinessException;
-import co.com.gestorfranquicia.model.exception.DomainException;
+import co.com.gestorfranquicia.model.exception.ProcessorException;
 import jakarta.validation.Validation;
 import org.junit.jupiter.api.Test;
 import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
@@ -32,7 +32,7 @@ class RequestValidatorTest {
         StepVerifier.create(validator.validate(request))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.INVALID_REQUEST))
                 .verify();
     }

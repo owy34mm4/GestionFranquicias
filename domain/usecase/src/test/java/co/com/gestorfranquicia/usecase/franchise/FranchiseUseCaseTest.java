@@ -4,7 +4,7 @@ import co.com.gestorfranquicia.model.branchtopproduct.BranchTopProduct;
 import co.com.gestorfranquicia.model.enums.RenameCheck;
 import co.com.gestorfranquicia.model.enums.TechnicalMessage;
 import co.com.gestorfranquicia.model.exception.BusinessException;
-import co.com.gestorfranquicia.model.exception.DomainException;
+import co.com.gestorfranquicia.model.exception.ProcessorException;
 import co.com.gestorfranquicia.model.franchise.Franchise;
 import co.com.gestorfranquicia.model.franchise.gateways.FranchiseRepository;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,7 @@ class FranchiseUseCaseTest {
         StepVerifier.create(franchiseUseCase.create("Coffee Shop"))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.FRANCHISE_ALREADY_EXISTS))
                 .verify();
 
@@ -78,7 +78,7 @@ class FranchiseUseCaseTest {
         StepVerifier.create(franchiseUseCase.topStockPerBranch(1L))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.FRANCHISE_NOT_FOUND))
                 .verify();
     }
@@ -101,7 +101,7 @@ class FranchiseUseCaseTest {
         StepVerifier.create(franchiseUseCase.updateName(1L, "New Name"))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.FRANCHISE_NOT_FOUND))
                 .verify();
 
@@ -115,7 +115,7 @@ class FranchiseUseCaseTest {
         StepVerifier.create(franchiseUseCase.updateName(1L, "New Name"))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.FRANCHISE_ALREADY_EXISTS))
                 .verify();
 

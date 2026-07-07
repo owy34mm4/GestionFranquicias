@@ -2,7 +2,7 @@ package co.com.gestorfranquicia.model.branch;
 
 import co.com.gestorfranquicia.model.enums.TechnicalMessage;
 import co.com.gestorfranquicia.model.exception.BusinessException;
-import co.com.gestorfranquicia.model.exception.DomainException;
+import co.com.gestorfranquicia.model.exception.ProcessorException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,7 +23,7 @@ class BranchTest {
     void shouldThrowWhenCreatingWithBlankName() {
         assertThatThrownBy(() -> Branch.create("   ", 1L))
                 .isInstanceOf(BusinessException.class)
-                .extracting(e -> ((DomainException) e).getTechnicalMessage())
+                .extracting(e -> ((ProcessorException) e).getTechnicalMessage())
                 .isEqualTo(TechnicalMessage.BRANCH_NAME_REQUIRED);
     }
 
@@ -53,7 +53,7 @@ class BranchTest {
 
         assertThatThrownBy(() -> branch.changeName(null))
                 .isInstanceOf(BusinessException.class)
-                .extracting(e -> ((DomainException) e).getTechnicalMessage())
+                .extracting(e -> ((ProcessorException) e).getTechnicalMessage())
                 .isEqualTo(TechnicalMessage.BRANCH_NAME_REQUIRED);
     }
 }

@@ -2,6 +2,8 @@ package co.com.gestorfranquicia.r2dbc.adapter;
 
 import co.com.gestorfranquicia.model.branchtopproduct.BranchTopProduct;
 import co.com.gestorfranquicia.model.enums.RenameCheck;
+import co.com.gestorfranquicia.model.enums.TechnicalMessage;
+import co.com.gestorfranquicia.model.exception.TechnicalException;
 import co.com.gestorfranquicia.model.franchise.Franchise;
 import co.com.gestorfranquicia.model.franchise.gateways.FranchiseRepository;
 import co.com.gestorfranquicia.r2dbc.data.BranchTopProductData;
@@ -22,42 +24,50 @@ public class FranchiseReactiveRepositoryAdapter implements FranchiseRepository {
 
     @Override
     public Mono<Franchise> save(Franchise franchise) {
-        return repository.save(toData(franchise)).map(this::toEntity);
+        return onAdapterFailure(repository.save(toData(franchise)).map(this::toEntity));
     }
 
     @Override
     public Mono<Franchise> findById(Long id) {
-        return repository.findById(id).map(this::toEntity);
+        return onAdapterFailure(repository.findById(id).map(this::toEntity));
     }
 
     @Override
     public Flux<Franchise> findAll() {
-        return repository.findAll().map(this::toEntity);
+        return onAdapterFailure(repository.findAll().map(this::toEntity));
     }
 
     @Override
     public Mono<Boolean> existsByName(String name) {
-        return repository.existsByName(name);
+        return onAdapterFailure(repository.existsByName(name));
     }
 
     @Override
     public Mono<Boolean> existsById(Long id) {
-        return repository.existsById(id);
+        return onAdapterFailure(repository.existsById(id));
     }
 
     @Override
     public Flux<BranchTopProduct> findTopStockPerBranch(Long franchiseId) {
-        return repository.findTopStockPerBranch(franchiseId).map(this::toReadModel);
+        return onAdapterFailure(repository.findTopStockPerBranch(franchiseId).map(this::toReadModel));
     }
 
     @Override
     public Mono<RenameCheck> validateForRename(String newName, Long id) {
-        return repository.validateForRename(newName, id).map(RenameCheck::valueOf);
+        return onAdapterFailure(repository.validateForRename(newName, id).map(RenameCheck::valueOf));
     }
 
     @Override
     public Mono<Void> updateName(Long id, String name) {
-        return repository.updateName(id, name);
+        return onAdapterFailure(repository.updateName(id, name));
+    }
+
+    private <T> Mono<T> onAdapterFailure(Mono<T> source) {
+        return source.onErrorMap(error -> new TechnicalException(error, TechnicalMessage.INTERNAL_ERROR));
+    }
+
+    private <T> Flux<T> onAdapterFailure(Flux<T> source) {
+        return source.onErrorMap(error -> new TechnicalException(error, TechnicalMessage.INTERNAL_ERROR));
     }
 
     private BranchTopProduct toReadModel(BranchTopProductData data) {

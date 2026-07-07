@@ -50,8 +50,8 @@ resilience4j:
         wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 3
         register-health-indicator: true
-        ignore-exceptions:
-          - co.com.gestorfranquicia.model.exception.BusinessException
+        record-exceptions:
+          - co.com.gestorfranquicia.model.exception.TechnicalException
       branchCreate:
         sliding-window-type: COUNT_BASED
         sliding-window-size: 10
@@ -60,8 +60,8 @@ resilience4j:
         wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 3
         register-health-indicator: true
-        ignore-exceptions:
-          - co.com.gestorfranquicia.model.exception.BusinessException
+        record-exceptions:
+          - co.com.gestorfranquicia.model.exception.TechnicalException
       productCreate:
         sliding-window-type: COUNT_BASED
         sliding-window-size: 10
@@ -70,8 +70,8 @@ resilience4j:
         wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 3
         register-health-indicator: true
-        ignore-exceptions:
-          - co.com.gestorfranquicia.model.exception.BusinessException
+        record-exceptions:
+          - co.com.gestorfranquicia.model.exception.TechnicalException
       productDelete:
         sliding-window-type: COUNT_BASED
         sliding-window-size: 10
@@ -80,8 +80,8 @@ resilience4j:
         wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 3
         register-health-indicator: true
-        ignore-exceptions:
-          - co.com.gestorfranquicia.model.exception.BusinessException
+        record-exceptions:
+          - co.com.gestorfranquicia.model.exception.TechnicalException
       productStockUpdate:
         sliding-window-type: COUNT_BASED
         sliding-window-size: 10
@@ -90,8 +90,8 @@ resilience4j:
         wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 3
         register-health-indicator: true
-        ignore-exceptions:
-          - co.com.gestorfranquicia.model.exception.BusinessException
+        record-exceptions:
+          - co.com.gestorfranquicia.model.exception.TechnicalException
       franchiseTopStock:
         sliding-window-type: COUNT_BASED
         sliding-window-size: 10
@@ -100,8 +100,8 @@ resilience4j:
         wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 3
         register-health-indicator: true
-        ignore-exceptions:
-          - co.com.gestorfranquicia.model.exception.BusinessException
+        record-exceptions:
+          - co.com.gestorfranquicia.model.exception.TechnicalException
       franchiseNameUpdate:
         sliding-window-type: COUNT_BASED
         sliding-window-size: 10
@@ -110,8 +110,8 @@ resilience4j:
         wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 3
         register-health-indicator: true
-        ignore-exceptions:
-          - co.com.gestorfranquicia.model.exception.BusinessException
+        record-exceptions:
+          - co.com.gestorfranquicia.model.exception.TechnicalException
       branchNameUpdate:
         sliding-window-type: COUNT_BASED
         sliding-window-size: 10
@@ -120,8 +120,8 @@ resilience4j:
         wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 3
         register-health-indicator: true
-        ignore-exceptions:
-          - co.com.gestorfranquicia.model.exception.BusinessException
+        record-exceptions:
+          - co.com.gestorfranquicia.model.exception.TechnicalException
       productNameUpdate:
         sliding-window-type: COUNT_BASED
         sliding-window-size: 10
@@ -130,5 +130,5 @@ resilience4j:
         wait-duration-in-open-state: 10s
         permitted-number-of-calls-in-half-open-state: 3
         register-health-indicator: true
-        ignore-exceptions:
-          - co.com.gestorfranquicia.model.exception.BusinessException
+        record-exceptions:
+          - co.com.gestorfranquicia.model.exception.TechnicalException

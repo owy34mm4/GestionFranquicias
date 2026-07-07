@@ -4,7 +4,7 @@ import co.com.gestorfranquicia.model.enums.CreationCheck;
 import co.com.gestorfranquicia.model.enums.RenameCheck;
 import co.com.gestorfranquicia.model.enums.TechnicalMessage;
 import co.com.gestorfranquicia.model.exception.BusinessException;
-import co.com.gestorfranquicia.model.exception.DomainException;
+import co.com.gestorfranquicia.model.exception.ProcessorException;
 import co.com.gestorfranquicia.model.product.Product;
 import co.com.gestorfranquicia.model.product.gateways.ProductRepository;
 import org.junit.jupiter.api.Test;
@@ -52,7 +52,7 @@ class ProductUseCaseTest {
         StepVerifier.create(productUseCase.create("Espresso", 10, 2L))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.BRANCH_NOT_FOUND))
                 .verify();
 
@@ -66,7 +66,7 @@ class ProductUseCaseTest {
         StepVerifier.create(productUseCase.create("Espresso", 10, 2L))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.PRODUCT_ALREADY_EXISTS))
                 .verify();
 
@@ -92,7 +92,7 @@ class ProductUseCaseTest {
         StepVerifier.create(productUseCase.delete(1L, 2L))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.PRODUCT_NOT_FOUND))
                 .verify();
     }
@@ -117,7 +117,7 @@ class ProductUseCaseTest {
         StepVerifier.create(productUseCase.updateStock(1L, 2L, 20))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.PRODUCT_NOT_FOUND))
                 .verify();
     }
@@ -140,7 +140,7 @@ class ProductUseCaseTest {
         StepVerifier.create(productUseCase.updateName(1L, 2L, "New Name"))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.PRODUCT_NOT_FOUND))
                 .verify();
 
@@ -154,7 +154,7 @@ class ProductUseCaseTest {
         StepVerifier.create(productUseCase.updateName(1L, 2L, "New Name"))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.PRODUCT_ALREADY_EXISTS))
                 .verify();
 

@@ -4,16 +4,16 @@ import co.com.gestorfranquicia.model.enums.TechnicalMessage;
 import lombok.Getter;
 
 @Getter
-public abstract class DomainException extends RuntimeException {
+public abstract class ProcessorException extends RuntimeException {
 
     private final TechnicalMessage technicalMessage;
 
-    protected DomainException(String message, TechnicalMessage technicalMessage) {
+    protected ProcessorException(String message, TechnicalMessage technicalMessage) {
         super(message);
         this.technicalMessage = technicalMessage;
     }
 
-    protected DomainException(Throwable cause, TechnicalMessage technicalMessage) {
+    protected ProcessorException(Throwable cause, TechnicalMessage technicalMessage) {
         super(cause);
         this.technicalMessage = technicalMessage;
     }

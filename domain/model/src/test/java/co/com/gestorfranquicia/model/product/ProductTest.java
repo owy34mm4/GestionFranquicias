@@ -2,7 +2,7 @@ package co.com.gestorfranquicia.model.product;
 
 import co.com.gestorfranquicia.model.enums.TechnicalMessage;
 import co.com.gestorfranquicia.model.exception.BusinessException;
-import co.com.gestorfranquicia.model.exception.DomainException;
+import co.com.gestorfranquicia.model.exception.ProcessorException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +24,7 @@ class ProductTest {
     void shouldThrowWhenCreatingWithBlankName() {
         assertThatThrownBy(() -> Product.create("   ", 10, 1L))
                 .isInstanceOf(BusinessException.class)
-                .extracting(e -> ((DomainException) e).getTechnicalMessage())
+                .extracting(e -> ((ProcessorException) e).getTechnicalMessage())
                 .isEqualTo(TechnicalMessage.PRODUCT_NAME_REQUIRED);
     }
 
@@ -32,7 +32,7 @@ class ProductTest {
     void shouldThrowWhenCreatingWithNegativeStock() {
         assertThatThrownBy(() -> Product.create("Espresso", -1, 1L))
                 .isInstanceOf(BusinessException.class)
-                .extracting(e -> ((DomainException) e).getTechnicalMessage())
+                .extracting(e -> ((ProcessorException) e).getTechnicalMessage())
                 .isEqualTo(TechnicalMessage.PRODUCT_STOCK_INVALID);
     }
 
@@ -40,7 +40,7 @@ class ProductTest {
     void shouldThrowWhenCreatingWithNullStock() {
         assertThatThrownBy(() -> Product.create("Espresso", null, 1L))
                 .isInstanceOf(BusinessException.class)
-                .extracting(e -> ((DomainException) e).getTechnicalMessage())
+                .extracting(e -> ((ProcessorException) e).getTechnicalMessage())
                 .isEqualTo(TechnicalMessage.PRODUCT_STOCK_INVALID);
     }
 
@@ -71,7 +71,7 @@ class ProductTest {
 
         assertThatThrownBy(() -> product.changeStock(-5))
                 .isInstanceOf(BusinessException.class)
-                .extracting(e -> ((DomainException) e).getTechnicalMessage())
+                .extracting(e -> ((ProcessorException) e).getTechnicalMessage())
                 .isEqualTo(TechnicalMessage.PRODUCT_STOCK_INVALID);
     }
 
@@ -91,7 +91,7 @@ class ProductTest {
 
         assertThatThrownBy(() -> product.changeName(" "))
                 .isInstanceOf(BusinessException.class)
-                .extracting(e -> ((DomainException) e).getTechnicalMessage())
+                .extracting(e -> ((ProcessorException) e).getTechnicalMessage())
                 .isEqualTo(TechnicalMessage.PRODUCT_NAME_REQUIRED);
     }
 }

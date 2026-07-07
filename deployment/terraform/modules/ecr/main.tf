@@ -5,7 +5,7 @@ module "ecr" {
   # Pinned to 2.x: the 3.x line requires AWS provider v6, but we use v5.
   version = "~> 2.4"
 
-  repository_name                 = "franquicia"
+  repository_name                 = var.repository_name
   repository_image_tag_mutability = "MUTABLE"
   repository_image_scan_on_push   = true
 

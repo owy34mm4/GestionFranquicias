@@ -2,7 +2,7 @@ package co.com.gestorfranquicia.model.exception;
 
 import co.com.gestorfranquicia.model.enums.TechnicalMessage;
 
-public class TechnicalException extends DomainException {
+public class TechnicalException extends ProcessorException {
 
     public TechnicalException(TechnicalMessage technicalMessage) {
         super(technicalMessage.getMessage(), technicalMessage);

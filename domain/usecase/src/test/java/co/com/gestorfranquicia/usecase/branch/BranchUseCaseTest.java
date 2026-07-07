@@ -6,7 +6,7 @@ import co.com.gestorfranquicia.model.enums.CreationCheck;
 import co.com.gestorfranquicia.model.enums.RenameCheck;
 import co.com.gestorfranquicia.model.enums.TechnicalMessage;
 import co.com.gestorfranquicia.model.exception.BusinessException;
-import co.com.gestorfranquicia.model.exception.DomainException;
+import co.com.gestorfranquicia.model.exception.ProcessorException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -52,7 +52,7 @@ class BranchUseCaseTest {
         StepVerifier.create(branchUseCase.create("Downtown", 2L))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.FRANCHISE_NOT_FOUND))
                 .verify();
 
@@ -66,7 +66,7 @@ class BranchUseCaseTest {
         StepVerifier.create(branchUseCase.create("Downtown", 2L))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.BRANCH_ALREADY_EXISTS))
                 .verify();
 
@@ -91,7 +91,7 @@ class BranchUseCaseTest {
         StepVerifier.create(branchUseCase.updateName(1L, "New Name"))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.BRANCH_NOT_FOUND))
                 .verify();
 
@@ -105,7 +105,7 @@ class BranchUseCaseTest {
         StepVerifier.create(branchUseCase.updateName(1L, "New Name"))
                 .expectErrorSatisfies(e -> assertThat(e)
                         .isInstanceOf(BusinessException.class)
-                        .extracting(err -> ((DomainException) err).getTechnicalMessage())
+                        .extracting(err -> ((ProcessorException) err).getTechnicalMessage())
                         .isEqualTo(TechnicalMessage.BRANCH_ALREADY_EXISTS))
                 .verify();
 

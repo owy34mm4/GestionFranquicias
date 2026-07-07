@@ -2,7 +2,7 @@ package co.com.gestorfranquicia.api.exception;
 
 import co.com.gestorfranquicia.model.enums.TechnicalMessage;
 import co.com.gestorfranquicia.model.exception.BusinessException;
-import co.com.gestorfranquicia.model.exception.DomainException;
+import co.com.gestorfranquicia.model.exception.ProcessorException;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.webflux.autoconfigure.error.AbstractErrorWebExceptionHandler;
@@ -48,8 +48,8 @@ public class GlobalExceptionHandler extends AbstractErrorWebExceptionHandler {
     }
 
     private TechnicalMessage resolve(Throwable error) {
-        if (error instanceof DomainException domainException) {
-            return domainException.getTechnicalMessage();
+        if (error instanceof ProcessorException processorException) {
+            return processorException.getTechnicalMessage();
         }
         if (error instanceof CallNotPermittedException) {
             return TechnicalMessage.SERVICE_UNAVAILABLE;

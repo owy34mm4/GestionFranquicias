@@ -10,7 +10,7 @@ output "vpc_cidr" {
 
 output "subnet_ids" {
   description = "Subnet ids in the default VPC"
-  value       = data.aws_subnets.default.ids
+  value       = local.usable_subnet_ids
 }
 
 output "region" {

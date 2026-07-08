@@ -30,6 +30,8 @@ En local con Docker. Los pasos estan en [GETTING-STARTED-LOCAL.md](GETTING-START
 
 ## Endpoints
 
+Public URL = https://5mcyan1x7g.execute-api.us-east-1.amazonaws.com/swagger-ui/index.html#/
+
 Todas las rutas cuelgan de `/api`.
 
 | Metodo | Ruta                                             | Que hace                                        |

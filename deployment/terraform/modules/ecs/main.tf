@@ -88,6 +88,8 @@ module "ecs_service" {
   assign_public_ip = true
   desired_count    = 1
 
+  enable_autoscaling = false
+
   # Task security group: only the ALB may reach the app on 8080.
   security_group_rules = {
     alb_ingress = {

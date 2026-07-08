@@ -28,8 +28,6 @@ module "alb" {
 
   security_group_egress_rules = {
     all_outbound = {
-      from_port   = 0
-      to_port     = 0
       ip_protocol = "-1"
       cidr_ipv4   = "0.0.0.0/0"
       description = "Allow all outbound"

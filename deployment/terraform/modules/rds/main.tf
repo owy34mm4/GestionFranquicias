@@ -24,8 +24,8 @@ module "rds" {
   storage_type      = "gp3"
   storage_encrypted = false
 
-  db_name  = local.db_name
-  username = local.db_username
+  db_name  = var.db_name
+  username = var.db_username
   password = var.db_password
   port     = 3306
 
@@ -38,6 +38,23 @@ module "rds" {
   skip_final_snapshot     = true
 
   create_db_subnet_group = true
-  subnet_ids             = data.aws_subnets.default.ids
+  subnet_ids             = var.subnet_ids
   vpc_security_group_ids = [aws_security_group.rds.id]
+}
+
+# Security group for RDS. The ingress rule from the ECS task is added in the
+# root module to break the ecs<->rds cycle (ecs needs rds.db_address, rds
+# needs ecs's security group id).
+resource "aws_security_group" "rds" {
+  name        = "franquicia-rds"
+  description = "Allow MySQL access from the ECS task only"
+  vpc_id      = var.vpc_id
+
+  egress {
+    description = "Allow all outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }

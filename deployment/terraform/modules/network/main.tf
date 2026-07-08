@@ -1,5 +1,6 @@
 # Use the account's default VPC and its subnets so we don't have to create
-# networking ourselves. Good enough for a simple public Fargate deployment.
+# networking ourselves. Good enough for a simple Fargate deployment behind
+# an internal ALB + API Gateway.
 data "aws_vpc" "default" {
   default = true
 }
